@@ -36,7 +36,7 @@ import threading
 import time
 import yuv2rgb
 from pygame.locals import *
-from subprocess import call  
+from subprocess import call, Popen  
 
 
 # UI classes ---------------------------------------------------------------
@@ -148,6 +148,8 @@ def fxCallback(n): # Pass 1 (next effect) or -1 (prev effect)
 
 def quitCallback(): # Quit confirmation button
 	saveSettings()
+	print 'exiting'
+	tyos = Popen(['sudo', 'python', '/home/pi/tyos/src/main.py'])
 	raise SystemExit
 
 def viewCallback(n): # Viewfinder buttons
@@ -221,7 +223,7 @@ storeModePrior  = -1      # Prior storage mode (for detecting changes)
 sizeMode        =  0      # Image size; default = Large
 fxMode          =  0      # Image effect; default = Normal
 isoMode         =  0      # ISO settingl default = Auto
-iconPath        = 'icons' # Subdirectory containing UI bitmaps (PNG format)
+iconPath        = '/home/pi/tyos/adafruit-pi-cam-master/icons' # Subdirectory containing UI bitmaps (PNG format)
 saveIdx         = -1      # Image index for saving (-1 = none set yet)
 loadIdx         = -1      # Image index for loading
 scaled          = None    # pygame Surface w/last-loaded image
@@ -474,6 +476,7 @@ def takePicture():
 	scaled = None
 	camera.resolution = sizeData[sizeMode][0]
 	camera.crop       = sizeData[sizeMode][2]
+	
 	try:
 	  camera.capture(filename, use_video_port=False, format='jpeg',
 	    thumbnail=None)
@@ -570,10 +573,14 @@ screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 
 # Init camera and set up default values
 camera            = picamera.PiCamera()
+
 atexit.register(camera.close)
 camera.resolution = sizeData[sizeMode][1]
 #camera.crop       = sizeData[sizeMode][2]
 camera.crop       = (0.0, 0.0, 1.0, 1.0)
+#Rotate
+camera.rotation = 90
+
 # Leave raw format at default YUV, don't touch, don't set to RGB!
 
 # Load all icons at startup.
@@ -597,8 +604,7 @@ loadSettings() # Must come last; fiddles with Button/Icon states
 
 # Main loop ----------------------------------------------------------------
 
-while(True):
-
+while(True):     
   # Process touchscreen input
   while True:
     for event in pygame.event.get():
