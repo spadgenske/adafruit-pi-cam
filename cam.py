@@ -223,7 +223,7 @@ storeModePrior  = -1      # Prior storage mode (for detecting changes)
 sizeMode        =  0      # Image size; default = Large
 fxMode          =  0      # Image effect; default = Normal
 isoMode         =  0      # ISO settingl default = Auto
-iconPath        = '/home/pi/tyos/adafruit-pi-cam-master/icons' # Subdirectory containing UI bitmaps (PNG format)
+iconPath        = '/home/pi/adafruit-pi-cam/icons' # Subdirectory containing UI bitmaps (PNG format)
 saveIdx         = -1      # Image index for saving (-1 = none set yet)
 loadIdx         = -1      # Image index for loading
 scaled          = None    # pygame Surface w/last-loaded image
